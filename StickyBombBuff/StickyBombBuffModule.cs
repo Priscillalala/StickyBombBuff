@@ -15,6 +15,7 @@ namespace StickyBombBuff
     {
         private byte ilindex;
         private bool _ilfound;
+        public virtual ImplicitArray<object> affectedLanguage { get; } = Array.Empty<object>();
         protected bool ilfound
         {
             get => _ilfound;
@@ -23,8 +24,9 @@ namespace StickyBombBuff
                 _ilfound = value;
                 if (!_ilfound)
                 {
-                    StackFrame frame = new StackFrame(1);
-                    GSUtil.Log(BepInEx.Logging.LogLevel.Error, $"{GetType().Name}: IL failed to find match at index {ilindex} (in method {frame.GetMethod().Name})");
+                    //StackFrame frame = new StackFrame(1);
+                    //(in method {frame.GetMethod().Name})
+                    GSUtil.Log(BepInEx.Logging.LogLevel.Error, $"{GetType().Name}: IL failed to find match at index {ilindex}");
                 }
                 ilindex++;
             }

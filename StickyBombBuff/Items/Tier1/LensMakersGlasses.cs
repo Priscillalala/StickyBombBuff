@@ -12,9 +12,9 @@ using RoR2.Items;
 namespace StickyBombBuff.Items.Tier1
 {
     [Configurable]
-    public class _PersonalShieldGenerator : StickyBombBuffModule
+    public class _LensMakersGlasses : StickyBombBuffModule
     {
-        public static float shield = 25f;
+        public static float critChance = 7f;
         public override void OnModInit()
         {
             IL.RoR2.CharacterBody.RecalculateStats += CharacterBody_RecalculateStats;
@@ -23,20 +23,16 @@ namespace StickyBombBuff.Items.Tier1
         private void CharacterBody_RecalculateStats(ILContext il)
         {
             ILCursor c = new ILCursor(il);
-            if(ilfound = SBBUtil.TryFindStackLocIndex(c, typeof(RoR2Content), nameof(RoR2Content.Items.PersonalShield), out int locStackIndex))
+            if(ilfound = SBBUtil.TryFindStackLocIndex(c, typeof(RoR2Content), nameof(RoR2Content.Items.CritGlasses), out int locStackIndex))
             {
-                int locShieldIndex = -1;
                 ilfound = c.TryGotoNext(MoveType.After,
-                x => x.MatchLdloc(out locShieldIndex),
-                x => x.MatchLdloc(locStackIndex)
-                ) && c.TryGotoNext(MoveType.Before,
-                x => x.MatchAdd(),
-                x => x.MatchStloc(locShieldIndex)
+                x => x.MatchLdloc(locStackIndex),
+                x => x.MatchConvR4(),
+                x => x.MatchLdcR4(out _)
                 );
                 if (ilfound)
                 {
-                    c.Emit(OpCodes.Ldloc, locStackIndex);
-                    c.EmitDelegate<Func<float, int, float>>((_, stack) => shield * stack);
+                    c.Prev.Operand = critChance;
                 }
             }
         }

@@ -9,7 +9,6 @@ using MonoMod.Cil;
 
 namespace StickyBombBuff
 {
-
     public static class SBBUtil
     {
         public static bool HealthComponent_TakeDamage_TryFindLocDamageIndex(ILCursor iLCursor, out int locDamageIndex)
@@ -24,16 +23,20 @@ namespace StickyBombBuff
             iLCursor.Index = 0;
             return found;
         }
-        public static bool TryFindStackLocIndex(ILCursor iLCursor, string contentName, string itemName, out int locStackIndex)
+        public static bool TryFindStackLocIndex(ILCursor iLCursor, Type content, string itemName, out int locStackIndex, bool moveCursorAfter = false)
         {
+
             int i = -1;
             bool found = iLCursor.TryGotoNext(MoveType.After,
-                x => x.MatchLdsfld(contentName + ".Items", itemName),
+                x => x.MatchLdsfld(content.GetNestedType("Items").GetField(itemName)),
                 x => x.MatchCallOrCallvirt<Inventory>(nameof(Inventory.GetItemCount)),
                 x => x.MatchStloc(out i)
                 );
             locStackIndex = i;
-            iLCursor.Index = 0;
+            if (!moveCursorAfter)
+            {
+                iLCursor.Index = 0;
+            }
             return found;
         }
     }

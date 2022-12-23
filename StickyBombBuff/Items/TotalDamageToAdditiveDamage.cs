@@ -13,6 +13,7 @@ namespace StickyBombBuff.Items
     [Configurable]
     public class TotalDamageToAdditiveDamage : StickyBombBuffModule
     {
+        public static string TryAddString(string localizedTotalDamageString) => StickyBombBuffPlugin.instance && StickyBombBuffPlugin.instance.ModuleEnabled<TotalDamageToAdditiveDamage>() ? string.Empty : localizedTotalDamageString;
         public override void OnModInit()
         {
             On.RoR2.Util.OnHitProcDamage += Util_OnHitProcDamage;

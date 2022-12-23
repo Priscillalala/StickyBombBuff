@@ -8,7 +8,7 @@ using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using GrooveSharedUtils.Attributes;
 
-namespace StickyBombBuff
+namespace StickyBombBuff.Junk
 {
     [ModuleOrderPriority(LoadOrder.Delayed)]
     public class ILPools : StickyBombBuffModule
