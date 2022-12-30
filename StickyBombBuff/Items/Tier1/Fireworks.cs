@@ -23,7 +23,6 @@ namespace StickyBombBuff.Items.Tier1
 
         private void _Fireworks_Completed(UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationHandle<GameObject> obj)
         {
-            GSUtil.Log("Fireworks completed!");
             obj.Completed -= _Fireworks_Completed;
             FireworkLauncher fireworkLauncher = obj.Result.GetComponent<FireworkLauncher>();
             fireworkLauncher.damageCoefficient = damageCoefficient;

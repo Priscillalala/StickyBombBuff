@@ -12,6 +12,9 @@ using MonoMod.Cil;
 using RoR2.ContentManagement;
 using System.Threading.Tasks;
 using Unity.Jobs;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using System.IO;
+using System.Reflection;
 
 #pragma warning disable
 [module: UnverifiableCode]
@@ -29,16 +32,41 @@ namespace StickyBombBuff
         public override string PLUGIN_VersionNumber => "1.0.0";
         public override string ENV_RelativeAssetBundleFolder => null;
 
-        private bool hasGeneratedEnabledLanguage;
+        /*private bool hasGeneratedEnabledLanguage;
         public static List<string> partialEnabledLanguage;
-        public static HashSet<string> enabledLanguage;
-        internal static List<ReadOnlyContentPack> loadedEarlyContentPacks = new List<ReadOnlyContentPack>(); 
-        internal JobHandle loadContentEarly;
-        internal static bool isLoadingContentEarly;
+        public static HashSet<string> enabledLanguage;*/
+        public static List<AsyncOperationHandle> asyncOperations = new List<AsyncOperationHandle>();
+        public static AssetBundle assets;
+
         public override void BeginModInit()
         {
-
+            using (Stream manifestResourceStream = assembly.GetManifestResourceStream("StickyBombBuff.Assets.sbbassets"))
+            {
+                assets = AssetBundle.LoadFromStream(manifestResourceStream);
+            }
+            On.RoR2.RoR2Application.Awake += RoR2Application_Awake;
         }
+
+        private void RoR2Application_Awake(On.RoR2.RoR2Application.orig_Awake orig, RoR2Application self)
+        {
+            int count = 0;
+            for (int i = 0; i < asyncOperations.Count; i++)
+            {
+                if (!asyncOperations[i].IsDone)
+                {
+                    asyncOperations[i].WaitForCompletion();
+                    count++;
+                }
+            }
+            asyncOperations = null;
+            if (count > 0)
+            {
+                GSUtil.Log(BepInEx.Logging.LogLevel.Warning, count + " async operations were not completed in time!");
+            }
+            On.RoR2.RoR2Application.Awake -= RoR2Application_Awake;
+            orig(self);
+        }
+
         public override void BeginCollectContent(AssetStream sasset)
         {
         }

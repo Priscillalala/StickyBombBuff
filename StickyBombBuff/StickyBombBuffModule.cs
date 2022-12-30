@@ -7,6 +7,8 @@ using System.Security.Permissions;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using System.Diagnostics;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace StickyBombBuff
 {
@@ -15,7 +17,6 @@ namespace StickyBombBuff
     {
         private byte ilindex;
         private bool _ilfound;
-        public virtual ImplicitArray<object> affectedLanguage { get; } = Array.Empty<object>();
         protected bool ilfound
         {
             get => _ilfound;
@@ -30,6 +31,11 @@ namespace StickyBombBuff
                 }
                 ilindex++;
             }
+        }
+        public AsyncOperationHandle<T> EnsureAsyncCompletion<T>(AsyncOperationHandle<T> handle)
+        {
+            StickyBombBuffPlugin.asyncOperations.Add(handle);
+            return handle;
         }
         public override void OnModInit()
         {

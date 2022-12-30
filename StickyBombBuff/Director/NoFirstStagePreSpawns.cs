@@ -8,7 +8,7 @@ using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using GrooveSharedUtils.Attributes;
 
-namespace StickyBombBuff.General
+namespace StickyBombBuff.Director
 {
     [Configurable]
     public class NoFirstStagePreSpawns : StickyBombBuffModule

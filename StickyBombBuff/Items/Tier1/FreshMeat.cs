@@ -15,7 +15,7 @@ namespace StickyBombBuff.Items.Tier1
     public class _FreshMeat : StickyBombBuffModule
     {
         public static ItemDef RegenOnKill;
-        public static float duration;
+        public static float duration = 3;
         public override void OnModInit()
         {
             GlobalEventManager.onCharacterDeathGlobal += GlobalEventManager_onCharacterDeathGlobal;
@@ -37,6 +37,8 @@ namespace StickyBombBuff.Items.Tier1
                 itemTier = ItemTier.Tier1,
                 itemTags = new[] { ItemTag.Healing, ItemTag.OnKillEffect },
                 overrideLoreToken = "ITEM_FLATHEALTH_LORE",
+                icon = StickyBombBuffPlugin.assets.LoadAsset<Sprite>("texFreshMeatIcon"),
+                pickupModelPrefab = GSUtil.AddressablesLoad<GameObject>("RoR2/Base/FlatHealth/PickupSteak.prefab")
             }.Build().ItemDef;
             sasset.Add(RegenOnKill);
         }

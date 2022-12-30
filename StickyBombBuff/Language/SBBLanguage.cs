@@ -13,6 +13,14 @@ namespace StickyBombBuff.Language
     public static class SBBLanguage
     {
         public static (string, string) nullString = (null, null);
+        public static string TryAdd<T>(object s, object defaultString = null) where T : BaseModModule
+        {
+            return (ModuleEnabled<T>() ? s : (defaultString ?? string.Empty)).ToString();
+        }
+        public static string TryRemove<T>(object s, object defaultString = null) where T : BaseModModule
+        {
+            return (ModuleEnabled<T>() ? (defaultString ?? string.Empty) : s).ToString();
+        }
         public static bool ModuleEnabled<T>() where T : BaseModModule
         {
             return StickyBombBuffPlugin.instance.ModuleEnabled<T>();
